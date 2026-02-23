@@ -1,7 +1,5 @@
-# Этап 1: Сборка
 FROM golang:1.25-alpine AS builder
 
-# Устанавливаем необходимые системные пакеты
 RUN apk add --no-cache git
 
 WORKDIR /app
