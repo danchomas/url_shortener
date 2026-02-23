@@ -1,0 +1,90 @@
+basePath: /
+definitions:
+  entity.CreateRequest:
+    properties:
+      url:
+        type: string
+    type: object
+  entity.CreateResponse:
+    properties:
+      code:
+        type: string
+      shortUrl:
+        type: string
+    type: object
+  entity.ShortLink:
+    properties:
+      clicks:
+        type: integer
+      code:
+        type: string
+      createdAt:
+        type: string
+      url:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: Сервис сокращения ссылок на Fiber + GORM + Postgres
+  title: URL Shortener API
+  version: "1.0"
+paths:
+  /r/{code}:
+    get:
+      parameters:
+      - description: Короткий код
+        in: path
+        name: code
+        required: true
+        type: string
+      responses:
+        "302":
+          description: Found
+      summary: Редирект на оригинальный URL
+      tags:
+      - links
+  /shorten:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: JSON request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/entity.CreateRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/entity.CreateResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Создать короткую ссылку
+      tags:
+      - links
+  /stats/{code}:
+    get:
+      parameters:
+      - description: Короткий код
+        in: path
+        name: code
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.ShortLink'
+      summary: Получить статистику по ссылке
+      tags:
+      - links
+swagger: "2.0"
